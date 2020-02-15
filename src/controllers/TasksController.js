@@ -2,21 +2,39 @@ const Task = require('../models/task');
 const Project = require('../models/project');
 
 module.exports = {
-    async store(req, res) {
+    async store(req, res, next) {
         const {title} = req.body;
         const {id: projectId} = req.params;
 
-        const task = new Task({
-            title,
-            projeto: projectId
-        });
+        try {
+            
+            const task = new Task({
+                title,
+                projeto: projectId
+            });
+    
+            const savedTask = await task.save();
+    
+            const project = await Project.findById(projectId);
+ 
+            if (!project) {
+                const error = new Error('Project not found!');
+                error.statusCode = 404;
+                throw error;
+            }
+            
+            project.tasks.push(savedTask);
 
-        const savedTask = await task.save();
+            await project.save()
+    
+            return res.status(201).json(savedTask);
 
-        const project = await Project.findById(projectId);
-        project.tasks.push(savedTask);
-        await project.save()
+        } catch(err) {
 
-        return res.status(201).json(savedTask);
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        };
     }
 }

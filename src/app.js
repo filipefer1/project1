@@ -10,6 +10,11 @@ app.use(express.json());
 
 app.use(routes);
 
+app.use((error, req, res, next) => {
+    const {message, data, statusCode} = error;
+    return res.status(statusCode).json({message, data});
+})
+
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
