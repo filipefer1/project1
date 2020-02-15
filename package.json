@@ -1,0 +1,17 @@
+{
+  "name": "Project1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Filipe Fernandes",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.8.13"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
