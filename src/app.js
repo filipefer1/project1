@@ -11,7 +11,9 @@ app.use(express.json());
 app.use(routes);
 
 app.use((error, req, res, next) => {
+    console.log("Here");
     const {message, data, statusCode} = error;
+    console.log(error)
     return res.status(statusCode).json({message, data});
 })
 

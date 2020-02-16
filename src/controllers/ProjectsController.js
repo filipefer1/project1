@@ -1,4 +1,5 @@
 const Project = require('../models/project');
+const {validationResult} = require('express-validator');
 
 module.exports = {
     async index(req, res, next) {
@@ -26,6 +27,15 @@ module.exports = {
     async store(req, res, next){
         const {title} = req.body;
 
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data is incorrect.');
+            error.statusCode = 422;
+            error.data = errors.array();
+            next(error);
+        };
+
         try {
             const project = new Project({
                 title
@@ -35,7 +45,6 @@ module.exports = {
             return res.status(201).json(savedProject);
 
         } catch(err) {
-
             if(!err.statusCode) {
                 err.statusCode = 500;
             }
@@ -46,6 +55,15 @@ module.exports = {
     async update(req, res, next){
         const { title } = req.body;
         const { id } = req.params;
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data is incorrect.');
+            error.statusCode = 422;
+            error.data = errors.array();
+            next(error);
+        };
 
         try {
 
